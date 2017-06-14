@@ -3,7 +3,13 @@ package shantanu.docmate;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Fade;
+import android.transition.Visibility;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -15,6 +21,8 @@ import android.widget.TextView;
 
 public class SplashScreen extends AppCompatActivity {
 
+    private static final String TAG = "SplashScreen";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +30,11 @@ public class SplashScreen extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        Fade fade = new Fade();
+        fade.setDuration(1000);
+        fade.setMode(Visibility.MODE_OUT);
+        getWindow().setExitTransition(fade);
 
         setContentView(R.layout.activity_splash_screen);
 
@@ -71,22 +84,38 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 try {
                     int time = 0;
-                    int totalTime = 4000;
+                    int totalTime = 1000;
                     sleep(500);
                     while (time <= totalTime) {
                         sleep(10);
                         time += 10;
-                        progressBar.setProgress((time*100)/totalTime);
+                        progressBar.setProgress((time * 100) / totalTime);
                     }
                 } catch (InterruptedException e) {
 
                 } finally {
-                    Intent openMenu = new Intent(getApplicationContext(), HomeActivity.class);
-                    startActivity(openMenu);
+                    final Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    final ActivityOptionsCompat[] compat = new ActivityOptionsCompat[1];
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        public void run() {
+                            try {
+                                compat[0] =ActivityOptionsCompat
+                                        .makeSceneTransitionAnimation(SplashScreen.this, null);
+                                startActivity(intent, compat[0].toBundle());
+                            } catch (Exception e) {
+                                Log.e(TAG, "run: EXCEPTION CAUGHT : ", e);
+                            }
+                        }
+                    });
                 }
             }
         };
         timer.start();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 }
