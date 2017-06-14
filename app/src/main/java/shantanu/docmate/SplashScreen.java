@@ -1,5 +1,6 @@
 package shantanu.docmate;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SplashScreen extends AppCompatActivity {
@@ -62,6 +64,29 @@ public class SplashScreen extends AppCompatActivity {
                 AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animate_title6));
         ((TextView) findViewById(R.id.title7)).startAnimation(
                 AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animate_title7));
+
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        Thread timer = new Thread() {
+            public void run() {
+                try {
+                    int time = 0;
+                    int totalTime = 4000;
+                    sleep(500);
+                    while (time <= totalTime) {
+                        sleep(10);
+                        time += 10;
+                        progressBar.setProgress((time*100)/totalTime);
+                    }
+                } catch (InterruptedException e) {
+
+                } finally {
+                    Intent openMenu = new Intent(getApplicationContext(), HomeActivity.class);
+                    startActivity(openMenu);
+                }
+            }
+        };
+        timer.start();
 
     }
 }
