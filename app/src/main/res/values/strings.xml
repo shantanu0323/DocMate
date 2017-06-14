@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DocMate</string>
+    <integer name="docmateLetterDuration">700</integer>
 </resources>
