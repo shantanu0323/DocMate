@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1003878323029",
+    "firebase_url": "https://docmate-d670e.firebaseio.com",
+    "project_id": "docmate-d670e",
+    "storage_bucket": "docmate-d670e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003878323029:android:9cf3679a836a3a10",
+        "android_client_info": {
+          "package_name": "shantanu.docmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003878323029-7red74clvjcc8mnp6r05e33f9181sg4d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "shantanu.docmate",
+            "certificate_hash": "a0c8df6ecf2d8148273483f098711777188dca44"
+          }
+        },
+        {
+          "client_id": "1003878323029-ackafvmq52poa4gl5thjq582fri3s31d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx-SagBoK8TaokZaVkW_SLXQ3HUOooImE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003878323029-ackafvmq52poa4gl5thjq582fri3s31d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
