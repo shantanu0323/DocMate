@@ -23,9 +23,23 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".LoginActivity">
+        <activity
+            android:name=".LoginActivity"
+            android:label="Login">
         </activity>
-        <activity android:name=".SetupActivity">
+        <activity
+            android:name=".SetupActivity"
+            android:label="Setup Account">
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="Register">
+        </activity>
+        <activity android:name=".DoctorRegistration"
+            android:label="Doctor Registration">
+        </activity>
+        <activity android:name=".PatientRegistration"
+            android:label="Patient Registration">
         </activity>
     </application>
 
