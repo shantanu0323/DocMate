@@ -54,14 +54,15 @@
 
 
             <RadioGroup
+                android:id="@+id/rgGender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:id="@+id/rgGender"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/rbMale"
+                    android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Male"/>
@@ -84,6 +85,20 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="Name"
+                    android:inputType="textPersonName"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/emailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Email"
                     android:inputType="textPersonName"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -145,6 +160,20 @@
                     android:ems="10"
                     android:hint="Blood Group"
                     android:inputType="textPersonName"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Password"
+                    android:inputType="textPassword"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
     </ScrollView>

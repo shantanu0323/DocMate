@@ -17,9 +17,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,6 +48,40 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
 
         init();
+
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setApplicationId("1:530266078999:android:481c4ecf3253701e") // Required for Analytics.
+                .setApiKey("AIzaSyBRxOyIj5dJkKgAVPXRLYFkdZwh2Xxq51k") // Required for Auth.
+                .setDatabaseUrl("https://simpleblog-a4d27.firebaseio.com/") // Required for RTDB.
+                .build();
+        FirebaseApp.initializeApp(this, options, "second");
+
+        // Retrieve my other app.
+        FirebaseApp app = FirebaseApp.getInstance("second");
+// Get the database for the other app.
+        FirebaseDatabase secondaryDatabase = FirebaseDatabase.getInstance(app);
+
+        final TextView tvResult = (TextView) findViewById(R.id.tvResult);
+        DatabaseReference secondRef = secondaryDatabase.getReference().child("Blogs").child
+                ("-KmBthYrZ__SG7Cc1oFl");
+        secondRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("desc")) {
+                    tvResult.setText(dataSnapshot.child("desc").getValue().toString());
+                } else {
+                    Log.e(TAG, "onDataChange: DATA NOT FOUND");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +193,13 @@ public class HomeActivity extends AppCompatActivity
         auth.addAuthStateListener(authStateListener);
     }
 
-//    private void checkUserExist() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        auth.removeAuthStateListener(authStateListener);
+    }
+
+    //    private void checkUserExist() {
 //        if (auth.getCurrentUser() != null) {
 //            final String userId = auth.getCurrentUser().getUid();
 //            databaseUsers.addValueEventListener(new ValueEventListener() {
