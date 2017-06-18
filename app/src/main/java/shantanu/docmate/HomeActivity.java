@@ -1,5 +1,6 @@
 package shantanu.docmate;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,10 +29,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.UUID;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "HomeActivity";
+    private static ProgressDialog progressDialog;
 
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -54,10 +58,11 @@ public class HomeActivity extends AppCompatActivity
                 .setApiKey("AIzaSyBRxOyIj5dJkKgAVPXRLYFkdZwh2Xxq51k") // Required for Auth.
                 .setDatabaseUrl("https://simpleblog-a4d27.firebaseio.com/") // Required for RTDB.
                 .build();
-        FirebaseApp.initializeApp(this, options, "second");
+        String otherApp = UUID.randomUUID().toString();
+        FirebaseApp.initializeApp(this, options, otherApp);
 
         // Retrieve my other app.
-        FirebaseApp app = FirebaseApp.getInstance("second");
+        FirebaseApp app = FirebaseApp.getInstance(otherApp);
 // Get the database for the other app.
         FirebaseDatabase secondaryDatabase = FirebaseDatabase.getInstance(app);
 
@@ -80,8 +85,6 @@ public class HomeActivity extends AppCompatActivity
 
             }
         });
-
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +128,7 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         };
+        progressDialog = new ProgressDialog(this);
     }
 
     @Override
