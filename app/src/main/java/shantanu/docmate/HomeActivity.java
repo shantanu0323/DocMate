@@ -12,6 +12,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.UUID;
 
+import shantanu.docmate.Data.Patient;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -39,7 +44,8 @@ public class HomeActivity extends AppCompatActivity
 
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
-    private DatabaseReference databaseUsers;
+    private DatabaseReference databasePatients;
+    private RecyclerView patientList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,35 +62,38 @@ public class HomeActivity extends AppCompatActivity
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setApplicationId("1:530266078999:android:481c4ecf3253701e") // Required for Analytics.
                 .setApiKey("AIzaSyBRxOyIj5dJkKgAVPXRLYFkdZwh2Xxq51k") // Required for Auth.
-                .setDatabaseUrl("https://simpleblog-a4d27.firebaseio.com/") // Required for RTDB.
+                .setDatabaseUrl("https://seeadoc-d731b.firebaseio.com/") // Required for RTDB.
                 .build();
-        String otherApp = UUID.randomUUID().toString();
-        FirebaseApp.initializeApp(this, options, otherApp);
+        String patientApp = UUID.randomUUID().toString();
+        FirebaseApp.initializeApp(this, options, patientApp);
 
         // Retrieve my other app.
-        FirebaseApp app = FirebaseApp.getInstance(otherApp);
+        FirebaseApp patientAppliction = FirebaseApp.getInstance(patientApp);
 // Get the database for the other app.
-        FirebaseDatabase secondaryDatabase = FirebaseDatabase.getInstance(app);
+        FirebaseDatabase patientDatabase = FirebaseDatabase.getInstance(patientAppliction);
 
         final TextView tvResult = (TextView) findViewById(R.id.tvResult);
-        DatabaseReference secondRef = secondaryDatabase.getReference().child("Blogs").child
-                ("-KmBthYrZ__SG7Cc1oFl");
-        secondRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("desc")) {
-                    tvResult.setText(dataSnapshot.child("desc").getValue().toString());
-                } else {
-                    Log.e(TAG, "onDataChange: DATA NOT FOUND");
-                }
+        databasePatients = patientDatabase.getReference().child("patient");
+        databasePatients.keepSynced(true);
 
-            }
+        databasePatients.child("8ieQjVcHTtR7R7ct2DZANMopt0z1")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild("name")) {
+                            Log.i(TAG, "onDataChange: Retrieved");
+                            tvResult.setText(dataSnapshot.child("name").getValue().toString());
+                        } else {
+                            Log.e(TAG, "onDataChange: DATA NOT FOUND");
+                        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    }
 
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +108,11 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void init() {
+        patientList = (RecyclerView) findViewById(R.id.patientList);
+        databasePatients = FirebaseDatabase.getInstance().getReference().child("patients");
+        patientList.setHasFixedSize(true);
+        patientList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -130,6 +144,73 @@ public class HomeActivity extends AppCompatActivity
         };
         progressDialog = new ProgressDialog(this);
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authStateListener);
+
+        FirebaseRecyclerAdapter<Patient, PatientViewHolder> adapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
+                Patient.class,
+                R.layout.row_patient,
+                PatientViewHolder.class,
+                databasePatients
+        ) {
+            @Override
+            protected void populateViewHolder(final PatientViewHolder viewHolder, final Patient model, final int position) {
+                Log.i(TAG, "populateViewHolder: Started");
+                String PatientKey = getRef(position).getKey().toString();
+
+
+                Log.i(TAG, "populateViewHolder: Name : " + model.getName());
+                Log.i(TAG, "populateViewHolder: Age : " + model.getAge());
+                viewHolder.setName(model.getName());
+                viewHolder.setAge(model.getAge());
+
+                databasePatients.child(model.getUid()).child("profilepic")
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue() != null) {
+                                    Log.i(TAG, "onDataChange: profilePic");
+                                    viewHolder.setProfilePic(getApplicationContext(), dataSnapshot
+                                            .getValue().toString());
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                // Adding OnClickListener() to the entire Card
+                viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+
+            }
+        };
+
+        adapter.notifyDataSetChanged();
+        patientList.setAdapter(adapter);
+//        if (flag) {
+//            progressDialog.dismiss();
+//            flag = false;
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        auth.removeAuthStateListener(authStateListener);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -183,46 +264,14 @@ public class HomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.action_profile) {
+            Intent intent = new Intent(getApplicationContext(), DoctorProfile.class);
+            startActivity(intent, ActivityOptionsCompat
+                    .makeSceneTransitionAnimation(HomeActivity.this, null).toBundle());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        checkUserExist();
-        auth.addAuthStateListener(authStateListener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        auth.removeAuthStateListener(authStateListener);
-    }
-
-    //    private void checkUserExist() {
-//        if (auth.getCurrentUser() != null) {
-//            final String userId = auth.getCurrentUser().getUid();
-//            databaseUsers.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    if (!dataSnapshot.hasChild(userId)) {
-//                        Log.e(TAG, "onDataChange: NO SUCH CHILD : REDIRECTING TO SetupActivity");
-//                        Intent intent = new Intent(getApplicationContext(), SetupActivity.class);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        startActivity(intent, ActivityOptionsCompat
-//                                .makeSceneTransitionAnimation(HomeActivity.this, null).toBundle());
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
-//        }
-//    }
 }

@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "onClick: REDIRECTING TO RegisterActivity...");
-                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DoctorRegistration.class);
                 startActivity(intent, ActivityOptionsCompat
                         .makeSceneTransitionAnimation(LoginActivity.this, null).toBundle());
             }

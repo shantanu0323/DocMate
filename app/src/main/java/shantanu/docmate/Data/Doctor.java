@@ -14,6 +14,7 @@ public class Doctor {
     private String specializtion;
     private String email;
     private String password;
+    private String uid;
 
     public Doctor(String profilePic, String gender, String name, String degree, String address, String phone, String specializtion, String email, String password) {
         this.profilePic = profilePic;
@@ -25,6 +26,15 @@ public class Doctor {
         this.specializtion = specializtion;
         this.email = email;
         this.password = password;
+        this.uid = "default";
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getEmail() {

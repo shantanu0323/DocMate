@@ -14,8 +14,12 @@ public class Patient {
     private String bloodGroup;
     private String email;
     private String password;
+    private String uid;
 
-    public Patient(String profilePic, String gender, String name, String age, String disease, String phone, String bloodGroup, String email, String password) {
+    public Patient() {
+    }
+
+    public Patient(String profilePic, String gender, String name, String age, String disease, String phone, String bloodGroup, String email, String password, String uid) {
         this.profilePic = profilePic;
         this.gender = gender;
         this.name = name;
@@ -25,6 +29,16 @@ public class Patient {
         this.bloodGroup = bloodGroup;
         this.email = email;
         this.password = password;
+        this.uid = uid;
+    }
+
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getEmail() {

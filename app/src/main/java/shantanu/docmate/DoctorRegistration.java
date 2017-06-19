@@ -34,7 +34,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import shantanu.docmate.Data.Doctor;
-import shantanu.docmate.Data.Patient;
 
 public class DoctorRegistration extends AppCompatActivity {
 
@@ -276,6 +275,7 @@ public class DoctorRegistration extends AppCompatActivity {
                                 currentUser.child("gender").setValue(doctor.getGender());
                                 currentUser.child("phone").setValue(doctor.getPhone());
                                 currentUser.child("specialization").setValue(doctor.getSpecializtion());
+                                currentUser.child("uid").setValue(auth.getCurrentUser().getUid());
                                 progressDialog.dismiss();
                                 Log.e(TAG, "onComplete: Redirecting to HomeActivity");
                                 Toast.makeText(DoctorRegistration.this, "Registration Successfull !!!",
