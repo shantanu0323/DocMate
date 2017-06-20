@@ -99,21 +99,26 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void init() {
+
         auth = FirebaseAuth.getInstance();
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() == null) {
-                    Log.e(TAG, "onAuthStateChanged: NO USER LOGGED IN");
+                    Log.i(TAG, "onAuthStateChanged: NO USER LOGGED IN");
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent, ActivityOptionsCompat
                             .makeSceneTransitionAnimation(HomeActivity.this, null).toBundle());
                     finish();
+                } else {
+                    Log.i(TAG, "onAuthStateChanged: User Logged in");
                 }
             }
         };
+
+//        auth.addAuthStateListener(authStateListener);
 
         patientList = (RecyclerView) findViewById(R.id.patientList);
         patientList.setHasFixedSize(true);
@@ -129,6 +134,7 @@ public class HomeActivity extends AppCompatActivity
         databaseDoctors = FirebaseDatabase.getInstance().getReference().child("doctor");
         databaseDoctors.keepSynced(true);
 
+//        Log.i(TAG, "init: UID : " + (auth.getCurrentUser() == null));
         databaseAcceptedPatients = FirebaseDatabase.getInstance().getReference().child("doctor")
                 .child(auth.getCurrentUser().getUid()).child("patients");
         databaseAcceptedPatients.keepSynced(true);
@@ -154,11 +160,16 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        Toast.makeText(this, "Started", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "onStart: CALLED");
         auth.addAuthStateListener(authStateListener);
+        Log.i(TAG, "onStart: authStatelistener Added");
         if (!loadingDone) {
             progressDialog.setMessage("Loading...");
             progressDialog.show();
         }
+
 
         FirebaseRecyclerAdapter<Patient, PatientViewHolder> patientsAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
                 Patient.class,
@@ -211,8 +222,11 @@ public class HomeActivity extends AppCompatActivity
             }
         };
 
+
         patientsAdapter.notifyDataSetChanged();
         patientList.setAdapter(patientsAdapter);
+
+
 
         FirebaseRecyclerAdapter<Patient, PendingAppointmentsViewHolder> pendingAppointmentsAdapter = new FirebaseRecyclerAdapter<Patient, PendingAppointmentsViewHolder>(
                 Patient.class,
