@@ -20,7 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.FirebaseApp;
@@ -45,7 +45,15 @@ public class HomeActivity extends AppCompatActivity
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databasePatients;
+    private DatabaseReference databasePendingAppointments;
+    private DatabaseReference databaseDoctors;
+    private DatabaseReference databaseAcceptedPatients;
+    private DatabaseReference databaseRejectedPatients;
+
     private RecyclerView patientList;
+    private boolean flag = true;
+    private boolean loadingDone = false;
+    private RecyclerView pendingAppointmentsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,28 +80,11 @@ public class HomeActivity extends AppCompatActivity
 // Get the database for the other app.
         FirebaseDatabase patientDatabase = FirebaseDatabase.getInstance(patientAppliction);
 
-        final TextView tvResult = (TextView) findViewById(R.id.tvResult);
         databasePatients = patientDatabase.getReference().child("patient");
         databasePatients.keepSynced(true);
 
-        databasePatients.child("8ieQjVcHTtR7R7ct2DZANMopt0z1")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild("name")) {
-                            Log.i(TAG, "onDataChange: Retrieved");
-                            tvResult.setText(dataSnapshot.child("name").getValue().toString());
-                        } else {
-                            Log.e(TAG, "onDataChange: DATA NOT FOUND");
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+        databaseRejectedPatients = patientDatabase.getReference().child("rejected");
+        databaseRejectedPatients.keepSynced(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -108,25 +99,6 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void init() {
-        patientList = (RecyclerView) findViewById(R.id.patientList);
-        databasePatients = FirebaseDatabase.getInstance().getReference().child("patients");
-        patientList.setHasFixedSize(true);
-        patientList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         auth = FirebaseAuth.getInstance();
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
@@ -142,6 +114,39 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         };
+
+        patientList = (RecyclerView) findViewById(R.id.patientList);
+        patientList.setHasFixedSize(true);
+        patientList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        pendingAppointmentsList = (RecyclerView) findViewById(R.id.pendingAppointmentList);
+        pendingAppointmentsList.setHasFixedSize(true);
+        pendingAppointmentsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        databasePendingAppointments = FirebaseDatabase.getInstance().getReference().child("appointments");
+        databasePendingAppointments.keepSynced(true);
+
+        databaseDoctors = FirebaseDatabase.getInstance().getReference().child("doctor");
+        databaseDoctors.keepSynced(true);
+
+        databaseAcceptedPatients = FirebaseDatabase.getInstance().getReference().child("doctor")
+                .child(auth.getCurrentUser().getUid()).child("patients");
+        databaseAcceptedPatients.keepSynced(true);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         progressDialog = new ProgressDialog(this);
     }
 
@@ -150,23 +155,27 @@ public class HomeActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         auth.addAuthStateListener(authStateListener);
+        if (!loadingDone) {
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
+        }
 
-        FirebaseRecyclerAdapter<Patient, PatientViewHolder> adapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
+        FirebaseRecyclerAdapter<Patient, PatientViewHolder> patientsAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
                 Patient.class,
-                R.layout.row_patient,
+                R.layout.patient_item_layout,
                 PatientViewHolder.class,
-                databasePatients
+                databaseAcceptedPatients
         ) {
             @Override
             protected void populateViewHolder(final PatientViewHolder viewHolder, final Patient model, final int position) {
                 Log.i(TAG, "populateViewHolder: Started");
-                String PatientKey = getRef(position).getKey().toString();
+                final String patientKey = getRef(position).getKey().toString();
 
 
                 Log.i(TAG, "populateViewHolder: Name : " + model.getName());
                 Log.i(TAG, "populateViewHolder: Age : " + model.getAge());
                 viewHolder.setName(model.getName());
-                viewHolder.setAge(model.getAge());
+                viewHolder.setAge(model.getAge() + " yrs");
 
                 databasePatients.child(model.getUid()).child("profilepic")
                         .addValueEventListener(new ValueEventListener() {
@@ -176,6 +185,12 @@ public class HomeActivity extends AppCompatActivity
                                     Log.i(TAG, "onDataChange: profilePic");
                                     viewHolder.setProfilePic(getApplicationContext(), dataSnapshot
                                             .getValue().toString());
+                                    if (flag) {
+                                        progressDialog.dismiss();
+                                        flag = false;
+                                        loadingDone = true;
+                                    }
+
                                 }
                             }
 
@@ -189,21 +204,104 @@ public class HomeActivity extends AppCompatActivity
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        Toast.makeText(HomeActivity.this, "Patient : " + patientKey, Toast.LENGTH_SHORT).show();
                     }
                 });
-
 
             }
         };
 
-        adapter.notifyDataSetChanged();
-        patientList.setAdapter(adapter);
-//        if (flag) {
-//            progressDialog.dismiss();
-//            flag = false;
-    }
+        patientsAdapter.notifyDataSetChanged();
+        patientList.setAdapter(patientsAdapter);
 
+        FirebaseRecyclerAdapter<Patient, PendingAppointmentsViewHolder> pendingAppointmentsAdapter = new FirebaseRecyclerAdapter<Patient, PendingAppointmentsViewHolder>(
+                Patient.class,
+                R.layout.pending_appointment_item_layout,
+                PendingAppointmentsViewHolder.class,
+                databasePendingAppointments.child(auth.getCurrentUser().getUid())
+        ) {
+            @Override
+            protected void populateViewHolder(final PendingAppointmentsViewHolder viewHolder, final Patient model, final int position) {
+                Log.i(TAG, "populateViewHolder: Started");
+                final String patientKey = getRef(position).getKey().toString();
+
+
+                Log.i(TAG, "populateViewHolder: Name : " + model.getName());
+                Log.i(TAG, "populateViewHolder: Age : " + model.getAge());
+                viewHolder.setName(model.getName());
+                viewHolder.setAge(model.getAge() + " yrs");
+
+                databasePatients.child(model.getUid()).child("profilepic")
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue() != null) {
+                                    Log.i(TAG, "onDataChange: profilePic");
+                                    viewHolder.setProfilePic(getApplicationContext(), dataSnapshot
+                                            .getValue().toString());
+                                    if (flag) {
+                                        progressDialog.dismiss();
+                                        flag = false;
+                                        loadingDone = true;
+                                    }
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                // Adding OnClickListener() to the entire Card
+                viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(HomeActivity.this, "Patient : " + patientKey, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // Adding OnClickLitener() to the Accept button
+                viewHolder.bAccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i(TAG, "onClick: Accepted");
+                        databasePatients.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.hasChild(patientKey)) {
+                                    databaseDoctors.child(auth.getCurrentUser().getUid()).child("patients")
+                                            .child(patientKey).setValue(dataSnapshot.child(patientKey).getValue());
+                                    databasePendingAppointments.child(auth.getCurrentUser().getUid())
+                                            .child(patientKey).removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+
+                // Adding OnClickLitener() to the Accept button
+                viewHolder.bReject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i(TAG, "onClick: Rejected");
+                        databasePendingAppointments.child(auth.getCurrentUser().getUid()).child(patientKey).removeValue();
+                        databaseRejectedPatients.child(auth.getCurrentUser().getUid()).child(patientKey).setValue("rejected");
+                    }
+                });
+
+            }
+        };
+
+        pendingAppointmentsAdapter.notifyDataSetChanged();
+        pendingAppointmentsList.setAdapter(pendingAppointmentsAdapter);
+    }
 
     @Override
     protected void onPause() {

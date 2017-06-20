@@ -202,7 +202,7 @@ public class DoctorRegistration extends AppCompatActivity {
         pickIntent.setType("image/*");
 
         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
         startActivityForResult(chooserIntent, GALLERY_REQUEST);
     }
@@ -268,7 +268,8 @@ public class DoctorRegistration extends AppCompatActivity {
                                 uploadImage(doctor.getProfilePic());
                                 DatabaseReference currentUser = databaseDoctor.child(userId);
 
-                                currentUser.child("name").setValue(doctor.getName());
+                                currentUser.child("name").setValue((doctor.getName().contains("Dr.")) ?
+                                        doctor.getName() : "Dr. " + doctor.getName());
                                 currentUser.child("email").setValue(doctor.getEmail());
                                 currentUser.child("address").setValue(doctor.getAddress());
                                 currentUser.child("degree").setValue(doctor.getDegree());
