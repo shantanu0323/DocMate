@@ -31,6 +31,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.util.UUID;
 
@@ -66,6 +68,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
 
         init();
+        Log.i(TAG, "onCreate: TOKEN : " + FirebaseInstanceId.getInstance().getToken());
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setApplicationId("1:530266078999:android:481c4ecf3253701e") // Required for Analytics.
@@ -161,6 +164,9 @@ public class HomeActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
+//        startService(new Intent(getApplicationContext(), MyFirebaseInstanceIDService.class));
+//        startService(new Intent(getApplicationContext(), MyFirebaseMessagingService.class));
+
         Toast.makeText(this, "Started", Toast.LENGTH_SHORT).show();
         Log.i(TAG, "onStart: CALLED");
         auth.addAuthStateListener(authStateListener);
@@ -216,6 +222,10 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(HomeActivity.this, "Patient : " + patientKey, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), PatientProfile.class);
+                        intent.putExtra("patientUid", patientKey);
+                        intent.putExtra("doctorUid", auth.getCurrentUser().getUid());
+                        startActivity(intent);
                     }
                 });
 
