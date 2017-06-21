@@ -2,6 +2,7 @@ package shantanu.docmate;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -32,11 +34,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.util.UUID;
 
 import shantanu.docmate.Data.Patient;
+import shantanu.docmate.Data.Report;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,6 +50,7 @@ public class HomeActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databasePatients;
     private DatabaseReference databasePendingAppointments;
+    private DatabaseReference databaseReports;
     private DatabaseReference databaseDoctors;
     private DatabaseReference databaseAcceptedPatients;
     private DatabaseReference databaseRejectedPatients;
@@ -56,6 +59,8 @@ public class HomeActivity extends AppCompatActivity
     private boolean flag = true;
     private boolean loadingDone = false;
     private RecyclerView pendingAppointmentsList;
+    private TextView appointmentsLabel, patientsLabel, reportsLabel;
+    private RecyclerView reportsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +107,13 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void init() {
+        appointmentsLabel = (TextView) findViewById(R.id.appointmentsLabel);
+        patientsLabel = (TextView) findViewById(R.id.patientLabel);
+        reportsLabel = (TextView) findViewById(R.id.reportsLabel);
+
+        appointmentsLabel.setVisibility(View.GONE);
+        patientsLabel.setVisibility(View.GONE);
+        reportsLabel.setVisibility(View.GONE);
 
         auth = FirebaseAuth.getInstance();
 
@@ -130,6 +142,16 @@ public class HomeActivity extends AppCompatActivity
         pendingAppointmentsList = (RecyclerView) findViewById(R.id.pendingAppointmentList);
         pendingAppointmentsList.setHasFixedSize(true);
         pendingAppointmentsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        reportsList = (RecyclerView) findViewById(R.id.reportsList);
+        reportsList.setHasFixedSize(true);
+        reportsList.setItemViewCacheSize(20);
+        reportsList.setDrawingCacheEnabled(true);
+        reportsList.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        reportsList.setLayoutManager(new LinearLayoutManager(this));
+
+        databaseReports = FirebaseDatabase.getInstance().getReference().child("doctor").child(auth.getCurrentUser().getUid()).child("reports");
+        databaseReports.keepSynced(true);
 
         databasePendingAppointments = FirebaseDatabase.getInstance().getReference().child("appointments");
         databasePendingAppointments.keepSynced(true);
@@ -163,11 +185,10 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-
 //        startService(new Intent(getApplicationContext(), MyFirebaseInstanceIDService.class));
 //        startService(new Intent(getApplicationContext(), MyFirebaseMessagingService.class));
 
-        Toast.makeText(this, "Started", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Started", Toast.LENGTH_SHORT).show();
         Log.i(TAG, "onStart: CALLED");
         auth.addAuthStateListener(authStateListener);
         Log.i(TAG, "onStart: authStatelistener Added");
@@ -176,6 +197,64 @@ public class HomeActivity extends AppCompatActivity
             progressDialog.show();
         }
 
+        updateLabels();
+
+        final FirebaseRecyclerAdapter<Report, ReportViewHolder> reportsAdapter = new FirebaseRecyclerAdapter<Report, ReportViewHolder>(
+                Report.class,
+                R.layout.reports_item_layout,
+                ReportViewHolder.class,
+                databaseReports
+        ) {
+            @Override
+            protected void populateViewHolder(final ReportViewHolder viewHolder, final Report model, final int position) {
+                final String reportKey = getRef(position).getKey().toString();
+
+                Log.i(TAG, "populateViewHolder: name : " + model.getName());
+                Log.i(TAG, "populateViewHolder: time : " + model.getTime());
+                Log.i(TAG, "populateViewHolder: image : " + model.getImage());
+                Log.i(TAG, "populateViewHolder: message : " + model.getMessage());
+                Log.i(TAG, "populateViewHolder: profilepic : " + model.getProfilepic());
+
+                viewHolder.setName(model.getName());
+                viewHolder.setTime(model.getTime());
+                viewHolder.setImage(getApplicationContext(), model.getImage(), getWindowManager().getDefaultDisplay().getWidth());
+                viewHolder.setMessage(model.getMessage());
+                viewHolder.setProfilepic(getApplicationContext(), model.getProfilepic());
+
+                // Adding OnClickListener() to the entire Card
+                viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(HomeActivity.this, "Report : " + reportKey, Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(getApplicationContext(), PatientProfile.class);
+//                        intent.putExtra("patientUid", reportKey);
+//                        intent.putExtra("doctorUid", auth.getCurrentUser().getUid());
+//                        startActivity(intent);
+                    }
+                });
+
+            }
+        };
+
+        reportsAdapter.notifyDataSetChanged();
+        reportsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int friendlyMessageCount = reportsAdapter.getItemCount();
+                int lastVisiblePosition =
+                        ((LinearLayoutManager) reportsList.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                // If the recycler view is initially being loaded or the
+                // user is at the bottom of the list, scroll to the bottom
+                // of the list to show the newly added message.
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (friendlyMessageCount - 1) &&
+                                lastVisiblePosition == (positionStart - 1))) {
+                    reportsList.scrollToPosition(positionStart);
+                }
+            }
+        });
+        reportsList.setAdapter(reportsAdapter);
 
         FirebaseRecyclerAdapter<Patient, PatientViewHolder> patientsAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
                 Patient.class,
@@ -185,12 +264,8 @@ public class HomeActivity extends AppCompatActivity
         ) {
             @Override
             protected void populateViewHolder(final PatientViewHolder viewHolder, final Patient model, final int position) {
-                Log.i(TAG, "populateViewHolder: Started");
                 final String patientKey = getRef(position).getKey().toString();
 
-
-                Log.i(TAG, "populateViewHolder: Name : " + model.getName());
-                Log.i(TAG, "populateViewHolder: Age : " + model.getAge());
                 viewHolder.setName(model.getName());
                 viewHolder.setAge(model.getAge() + " yrs");
 
@@ -204,6 +279,7 @@ public class HomeActivity extends AppCompatActivity
                                             .getValue().toString());
                                     if (flag) {
                                         progressDialog.dismiss();
+//                                        checkIfPatientsEmpty();
                                         flag = false;
                                         loadingDone = true;
                                     }
@@ -237,7 +313,6 @@ public class HomeActivity extends AppCompatActivity
         patientList.setAdapter(patientsAdapter);
 
 
-
         FirebaseRecyclerAdapter<Patient, PendingAppointmentsViewHolder> pendingAppointmentsAdapter = new FirebaseRecyclerAdapter<Patient, PendingAppointmentsViewHolder>(
                 Patient.class,
                 R.layout.pending_appointment_item_layout,
@@ -246,12 +321,8 @@ public class HomeActivity extends AppCompatActivity
         ) {
             @Override
             protected void populateViewHolder(final PendingAppointmentsViewHolder viewHolder, final Patient model, final int position) {
-                Log.i(TAG, "populateViewHolder: Started");
                 final String patientKey = getRef(position).getKey().toString();
 
-
-                Log.i(TAG, "populateViewHolder: Name : " + model.getName());
-                Log.i(TAG, "populateViewHolder: Age : " + model.getAge());
                 viewHolder.setName(model.getName());
                 viewHolder.setAge(model.getAge() + " yrs");
 
@@ -265,6 +336,7 @@ public class HomeActivity extends AppCompatActivity
                                             .getValue().toString());
                                     if (flag) {
                                         progressDialog.dismiss();
+//                                        checkIfAppointmentsEmpty();
                                         flag = false;
                                         loadingDone = true;
                                     }
@@ -317,6 +389,7 @@ public class HomeActivity extends AppCompatActivity
                         Log.i(TAG, "onClick: Rejected");
                         databasePendingAppointments.child(auth.getCurrentUser().getUid()).child(patientKey).removeValue();
                         databaseRejectedPatients.child(auth.getCurrentUser().getUid()).child(patientKey).setValue("rejected");
+                        pendingAppointmentsList.notify();
                     }
                 });
 
@@ -325,6 +398,74 @@ public class HomeActivity extends AppCompatActivity
 
         pendingAppointmentsAdapter.notifyDataSetChanged();
         pendingAppointmentsList.setAdapter(pendingAppointmentsAdapter);
+
+    }
+
+    private void updateLabels() {
+
+        databaseAcceptedPatients.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    patientsLabel.setVisibility(View.VISIBLE);
+                    patientsLabel.setText("My Patients");
+                    patientsLabel.setTextColor(Color.rgb(0, 0, 0));
+                } else {
+                    patientsLabel.setVisibility(View.VISIBLE);
+                    patientsLabel.setText("No Patients registered...");
+                    patientsLabel.setTextColor(Color.rgb(150, 150, 150));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        databasePendingAppointments.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    Log.i(TAG, "checkIfAppointmentsEmpty: NOT EMPTY");
+                    appointmentsLabel.setVisibility(View.VISIBLE);
+                    appointmentsLabel.setText("Pending Appointments");
+                    appointmentsLabel.setTextColor(Color.rgb(0, 0, 0));
+                } else {
+                    Log.i(TAG, "checkIfAppointmentsEmpty: EMPTY");
+                    appointmentsLabel.setVisibility(View.VISIBLE);
+                    appointmentsLabel.setText("No Pending Appointments ...");
+                    appointmentsLabel.setTextColor(Color.rgb(150, 150, 150));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        databaseReports.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    Log.i(TAG, "checkIfReportstsEmpty: NOT EMPTY");
+                    reportsLabel.setVisibility(View.VISIBLE);
+                    reportsLabel.setText("Reports");
+                    reportsLabel.setTextColor(Color.rgb(0, 0, 0));
+                } else {
+                    Log.i(TAG, "checkIfReportsEmpty: EMPTY");
+                    reportsLabel.setVisibility(View.VISIBLE);
+                    reportsLabel.setText("No Reports ...");
+                    reportsLabel.setTextColor(Color.rgb(150, 150, 150));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -332,7 +473,6 @@ public class HomeActivity extends AppCompatActivity
         super.onPause();
         auth.removeAuthStateListener(authStateListener);
     }
-
 
     @Override
     public void onBackPressed() {

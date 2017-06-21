@@ -10,7 +10,7 @@
     tools:showIn="@layout/app_bar_home">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/appointmentsLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -20,6 +20,7 @@
         android:text="Pending Appointments"
         android:textColor="#000"
         android:textSize="24sp"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/pendingAppointmentList"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -28,49 +29,69 @@
         android:id="@+id/pendingAppointmentList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:paddingLeft="10dp"
-        android:text="My Patients"
-        android:textColor="#000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/patientList"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <!--<TextView-->
-    <!--android:id="@+id/emptyView"-->
-    <!--android:layout_width="368dp"-->
-    <!--android:layout_height="150dp"-->
-    <!--android:layout_marginBottom="8dp"-->
-    <!--android:layout_marginRight="8dp"-->
-    <!--android:gravity="center"-->
-    <!--android:text="No registered patients"-->
-    <!--android:textSize="20sp"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintRight_toRightOf="parent" />-->
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/patientList"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/appointmentsLabel"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/reportsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:paddingLeft="10dp"
+                android:text="Reports"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:visibility="visible" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reportsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/patientLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:paddingLeft="10dp"
+                android:text="My Patients"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:visibility="visible" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/patientList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </android.support.constraint.ConstraintLayout>

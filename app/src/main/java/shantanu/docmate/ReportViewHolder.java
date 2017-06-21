@@ -4,22 +4,18 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-public class PatientViewHolder extends RecyclerView.ViewHolder {
+public class ReportViewHolder extends RecyclerView.ViewHolder {
 
     private static final String TAG = "PatientViewHolder";
     View view;
@@ -28,7 +24,7 @@ public class PatientViewHolder extends RecyclerView.ViewHolder {
     FirebaseAuth mAuth;
     DatabaseReference mDatabaseLikes;
 
-    public PatientViewHolder(View itemView) {
+    public ReportViewHolder(View itemView) {
         super(itemView);
         view = itemView;
         bProfilePic = (ImageView) view.findViewById(R.id.profilePic);
@@ -38,15 +34,23 @@ public class PatientViewHolder extends RecyclerView.ViewHolder {
 
     public void setName(String name) {
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
-        tvName.setText(name);
+        tvName.setText(name + " says :");
+        Log.i(TAG, "setName: " + name);
     }
 
-    public void setAge(String age) {
-        TextView tvAge = (TextView) view.findViewById(R.id.tvAge);
-        tvAge.setText(age);
+    public void setMessage(String message) {
+        TextView tvAge = (TextView) view.findViewById(R.id.tvMessage);
+        tvAge.setText("\"" + message + "\"");
+        Log.i(TAG, "setAge: " + message);
     }
 
-    public void setProfilePic(final Context context, final String profilePicUrl) {
+    public void setTime(String time) {
+        TextView tvTime = (TextView) view.findViewById(R.id.tvTime);
+        tvTime.setText(time);
+        Log.i(TAG, "setName: " + time);
+    }
+
+    public void setProfilepic(final Context context, final String profilePicUrl) {
         final ImageView profilePic = (ImageView) view.findViewById(R.id.profilePic);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
@@ -63,6 +67,22 @@ public class PatientViewHolder extends RecyclerView.ViewHolder {
                         progressBar.setVisibility(View.GONE);
                     }
                 });
+
+    }
+
+    public void setImage(final Context context, final String imageUrl, int width) {
+        final ImageView image = (ImageView) view.findViewById(R.id.image);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        });
+//        thread.start();
+        AQuery androidAQuery=new AQuery(context);
+        androidAQuery.id(image).image(imageUrl, true, true, width, R.drawable.default_image);
 
     }
 
