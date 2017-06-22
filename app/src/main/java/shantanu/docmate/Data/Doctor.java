@@ -5,29 +5,43 @@ package shantanu.docmate.Data;
  */
 
 public class Doctor {
-    private String profilePic;
+    private String profilepic;
     private String gender;
     private String name;
     private String degree;
     private String address;
     private String phone;
-    private String specializtion;
+    private String specialization;
     private String email;
     private String password;
     private String uid;
 
     public Doctor(String profilePic, String gender, String name, String degree, String address, String phone, String specializtion, String email, String password) {
-        this.profilePic = profilePic;
+        this.profilepic = profilePic;
         this.gender = gender;
         this.name = name;
         this.degree = degree;
         this.address = address;
         this.phone = phone;
-        this.specializtion = specializtion;
+        this.specialization = specializtion;
         this.email = email;
         this.password = password;
         this.uid = "default";
     }
+
+    public Doctor(String profilepic, String name, String degree, String address, String phone, String specialization, String email) {
+        this.profilepic = profilepic;
+//        this.gender = gender;
+        this.name = name;
+        this.degree = degree;
+        this.address = address;
+        this.phone = phone;
+        this.specialization = specialization;
+        this.email = email;
+//        this.password = password;
+        this.uid = "default";
+    }
+
 
     public String getUid() {
         return uid;
@@ -53,12 +67,12 @@ public class Doctor {
         this.password = password;
     }
 
-    public String getProfilePic() {
-        return profilePic;
+    public String getProfilepic() {
+        return profilepic;
     }
 
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
+    public void setProfilepic(String profilepic) {
+        this.profilepic = profilepic;
     }
 
     public String getGender() {
@@ -101,11 +115,11 @@ public class Doctor {
         this.phone = phone;
     }
 
-    public String getSpecializtion() {
-        return specializtion;
+    public String getSpecialization() {
+        return specialization;
     }
 
-    public void setSpecializtion(String specializtion) {
-        this.specializtion = specializtion;
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
     }
 }

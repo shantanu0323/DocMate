@@ -5,13 +5,13 @@ package shantanu.docmate.Data;
  */
 
 public class Patient {
-    private String profilePic;
+    private String profilepic;
     private String gender;
     private String name;
     private String age;
-    private String disease;
+    private String diseases;
     private String phone;
-    private String bloodGroup;
+    private String bloodgroup;
     private String email;
     private String password;
     private String uid;
@@ -19,17 +19,26 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(String profilePic, String gender, String name, String age, String disease, String phone, String bloodGroup, String email, String password, String uid) {
-        this.profilePic = profilePic;
+    public Patient(String profilePic, String gender, String name, String age, String diseases, String phone, String bloodGroup, String email, String password, String uid) {
+        this.profilepic = profilePic;
         this.gender = gender;
         this.name = name;
         this.age = age;
-        this.disease = disease;
+        this.diseases = diseases;
         this.phone = phone;
-        this.bloodGroup = bloodGroup;
+        this.bloodgroup = bloodGroup;
         this.email = email;
         this.password = password;
         this.uid = uid;
+    }
+
+    public Patient(String profilepic, String gender, String name, String age, String diseases, String bloodgroup) {
+        this.profilepic = profilepic;
+        this.gender = gender;
+        this.name = name;
+        this.age = age;
+        this.diseases = diseases;
+        this.bloodgroup = bloodgroup;
     }
 
 
@@ -57,12 +66,12 @@ public class Patient {
         this.password = password;
     }
 
-    public String getProfilePic() {
-        return profilePic;
+    public String getProfilepic() {
+        return profilepic;
     }
 
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
+    public void setProfilepic(String profilepic) {
+        this.profilepic = profilepic;
     }
 
     public String getGender() {
@@ -89,12 +98,12 @@ public class Patient {
         this.age = age;
     }
 
-    public String getDisease() {
-        return disease;
+    public String getDiseases() {
+        return diseases;
     }
 
-    public void setDisease(String disease) {
-        this.disease = disease;
+    public void setDiseases(String diseases) {
+        this.diseases = diseases;
     }
 
     public String getPhone() {
@@ -105,11 +114,11 @@ public class Patient {
         this.phone = phone;
     }
 
-    public String getBloodGroup() {
-        return bloodGroup;
+    public String getBloodgroup() {
+        return bloodgroup;
     }
 
-    public void setBloodGroup(String bloodGroup) {
-        this.bloodGroup = bloodGroup;
+    public void setBloodgroup(String bloodgroup) {
+        this.bloodgroup = bloodgroup;
     }
 }

@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="shantanu.docmate.EPrescription">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#ccc"
+        android:paddingBottom="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <shantanu.docmate.CustomLayout.CircularImageView
+                android:id="@+id/ivDoctorProfile"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toLeftOf="@+id/tvDoctorName"
+                app:layout_constraintRight_toRightOf="@+id/tvDoctorName"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDoctorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:shadowColor="#fff"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="3"
+                android:text="Doctor Name"
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivDoctorProfile" />
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tvDoctorAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="6dp"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="DoctorAddress"
+            android:textColor="#09d"
+            app:layout_constraintLeft_toLeftOf="@+id/tvDegree"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDegree" />
+
+        <TextView
+            android:id="@+id/tvDoctorPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="Doctor Phone"
+            android:textColor="#09d"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="@+id/tvDoctorAddress"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDoctorAddress" />
+
+        <TextView
+            android:id="@+id/tvSpecialization"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="Specialization"
+            android:textColor="#00965c"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toRightOf="@+id/constraintLayout2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDoctorEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="Email"
+            android:textColor="#09d"
+            app:layout_constraintLeft_toLeftOf="@+id/tvDoctorPhone"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDoctorPhone" />
+
+        <TextView
+            android:id="@+id/tvDegree"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="Degree"
+            android:textColor="#00965c"
+            app:layout_constraintLeft_toLeftOf="@+id/tvSpecialization"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSpecialization" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#96ffffff"
+        android:elevation="6dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintHorizontal_bias="0.522"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+        <TextView
+            android:id="@+id/tvPatientName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="Patient Name"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/ivPatientProfile"
+            app:layout_constraintTop_toTopOf="@+id/ivPatientProfile" />
+
+        <TextView
+            android:id="@+id/tvBloodgroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="B G"
+            android:textColor="#d00"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvAge"
+            app:layout_constraintLeft_toRightOf="@+id/tvAge" />
+
+        <TextView
+            android:id="@+id/tvAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="Age"
+            android:textColor="#00965c"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvPatientName"
+            app:layout_constraintLeft_toRightOf="@+id/tvGender" />
+
+        <TextView
+            android:id="@+id/tvDiseases"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="Disease"
+            android:textColor="#09d"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/tvPatientName"
+            app:layout_constraintTop_toBottomOf="@+id/tvPatientName" />
+
+        <shantanu.docmate.CustomLayout.CircularImageView
+            android:id="@+id/ivPatientProfile"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Gender"
+            android:shadowColor="#fff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:textColor="#00965c"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tvPatientName"
+            app:layout_constraintLeft_toRightOf="@+id/tvPatientName" />
+    </android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="72dp"
+            tools:layout_editor_absoluteY="342dp">
+
+            <ImageButton
+                android:id="@+id/bCamera"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_ripple_button"
+                android:padding="20dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_camera"
+                tools:layout_editor_absoluteX="162dp"
+                tools:layout_editor_absoluteY="360dp" />
+
+            <ImageButton
+                android:id="@+id/bGallery"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_ripple_button"
+                android:padding="20dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_gallery"
+                tools:layout_editor_absoluteX="162dp"
+                tools:layout_editor_absoluteY="360dp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/bWrite"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_ripple_button2"
+            android:padding="20dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ic_write"
+            tools:layout_editor_absoluteX="102dp"
+            tools:layout_editor_absoluteY="477dp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/etPrescription"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/bg_blank"
+        android:ems="10"
+        android:hint="Prescribe the Meds below..."
+        android:inputType="textPersonName"
+        android:padding="20dp"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+    <ImageView
+        android:id="@+id/ivPrescription"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout3"
+        app:srcCompat="@drawable/default_image" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/bSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        android:visibility="gone"
+        app:backgroundTint="@color/colorPrimary"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:rippleColor="#fff"
+        app:srcCompat="@drawable/ic_send" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/bDiscard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:visibility="gone"
+        app:backgroundTint="#e00"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/bSend"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bSend"
+        app:srcCompat="@drawable/ic_delete" />
+
+
+</android.support.constraint.ConstraintLayout>

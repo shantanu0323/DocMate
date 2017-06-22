@@ -146,7 +146,7 @@ public class DoctorRegistration extends AppCompatActivity {
             degreeLabel.setError("Field cannot be empty!!!");
             dataValid = false;
         }
-        if (TextUtils.isEmpty(doctor.getSpecializtion())) {
+        if (TextUtils.isEmpty(doctor.getSpecialization())) {
             specilizationLabel.setError("Field cannot be empty!!!");
             dataValid = false;
         }
@@ -265,7 +265,7 @@ public class DoctorRegistration extends AppCompatActivity {
                                 Log.e(TAG, "onComplete: REGISTERING USER SUCCESSFULL");
                                 String userId = auth.getCurrentUser().getUid();
 
-                                uploadImage(doctor.getProfilePic());
+                                uploadImage(doctor.getProfilepic());
                                 DatabaseReference currentUser = databaseDoctor.child(userId);
 
                                 currentUser.child("name").setValue((doctor.getName().contains("Dr.")) ?
@@ -275,7 +275,7 @@ public class DoctorRegistration extends AppCompatActivity {
                                 currentUser.child("degree").setValue(doctor.getDegree());
                                 currentUser.child("gender").setValue(doctor.getGender());
                                 currentUser.child("phone").setValue(doctor.getPhone());
-                                currentUser.child("specialization").setValue(doctor.getSpecializtion());
+                                currentUser.child("specialization").setValue(doctor.getSpecialization());
                                 currentUser.child("uid").setValue(auth.getCurrentUser().getUid());
                                 progressDialog.dismiss();
                                 Log.e(TAG, "onComplete: Redirecting to HomeActivity");

@@ -27,7 +27,7 @@ public class ReportViewHolder extends RecyclerView.ViewHolder {
     public ReportViewHolder(View itemView) {
         super(itemView);
         view = itemView;
-        bProfilePic = (ImageView) view.findViewById(R.id.profilePic);
+        bProfilePic = (ImageView) view.findViewById(R.id.profilepic);
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -51,7 +51,7 @@ public class ReportViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setProfilepic(final Context context, final String profilePicUrl) {
-        final ImageView profilePic = (ImageView) view.findViewById(R.id.profilePic);
+        final ImageView profilePic = (ImageView) view.findViewById(R.id.profilepic);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         Picasso.with(context).load(profilePicUrl).networkPolicy(NetworkPolicy.OFFLINE).into(profilePic,
@@ -74,15 +74,7 @@ public class ReportViewHolder extends RecyclerView.ViewHolder {
         final ImageView image = (ImageView) view.findViewById(R.id.image);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        });
-//        thread.start();
-        AQuery androidAQuery=new AQuery(context);
-        androidAQuery.id(image).image(imageUrl, true, true, width, R.drawable.default_image);
+        (new AQuery(context)).id(image).image(imageUrl, true, true, width, R.drawable.default_image);
 
     }
 

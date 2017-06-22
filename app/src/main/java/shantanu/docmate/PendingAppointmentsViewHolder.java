@@ -29,7 +29,7 @@ public class PendingAppointmentsViewHolder extends RecyclerView.ViewHolder {
     public PendingAppointmentsViewHolder(View itemView) {
         super(itemView);
         view = itemView;
-        bProfilePic = (ImageView) view.findViewById(R.id.profilePic);
+        bProfilePic = (ImageView) view.findViewById(R.id.profilepic);
         bAccept = (Button) view.findViewById(R.id.bAccept);
         bReject = (Button) view.findViewById(R.id.bReject);
 
@@ -49,7 +49,7 @@ public class PendingAppointmentsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setProfilePic(final Context context, final String profilePicUrl) {
-        final ImageView profilePic = (ImageView) view.findViewById(R.id.profilePic);
+        final ImageView profilePic = (ImageView) view.findViewById(R.id.profilepic);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         Picasso.with(context).load(profilePicUrl).networkPolicy(NetworkPolicy.OFFLINE).into(profilePic,

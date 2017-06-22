@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,21 +23,21 @@
             android:elevation="1dp"
             android:scaleType="centerCrop"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp"/>
+            tools:layout_editor_absoluteY="0dp" />
 
         <LinearLayout
-            android:elevation="2dp"
-            android:background="#000"
-            android:alpha="0.7"
             android:layout_width="match_parent"
-            android:layout_height="400dp"/>
+            android:layout_height="400dp"
+            android:alpha="0.7"
+            android:background="#000"
+            android:elevation="2dp" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="3dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/wedge"/>
+            app:srcCompat="@drawable/wedge" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -46,7 +45,7 @@
             android:elevation="4dp">
 
             <ImageView
-                android:id="@+id/profilePic"
+                android:id="@+id/profilepic"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_marginTop="50dp"
@@ -54,7 +53,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/default_image"/>
+                app:srcCompat="@drawable/default_image" />
 
             <TextView
                 android:id="@+id/tvUsername"
@@ -70,7 +69,7 @@
                 android:textSize="36sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profilePic"/>
+                app:layout_constraintTop_toBottomOf="@+id/profilepic" />
 
             <TextView
                 android:id="@+id/tvEmail"
@@ -88,7 +87,7 @@
                 app:layout_constraintHorizontal_bias="0.516"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvUsername"/>
+                app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
 
         </android.support.constraint.ConstraintLayout>
@@ -101,12 +100,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="20dp"
-        android:src="@drawable/ic_delete"
-        app:fabSize="auto"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"/>
+        android:src="@drawable/ic_delete"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/bPrescribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="96dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_prescription"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>
 
