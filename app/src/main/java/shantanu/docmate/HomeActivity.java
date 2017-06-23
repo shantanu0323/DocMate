@@ -355,6 +355,10 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(HomeActivity.this, "Patient : " + patientKey, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), PatientProfile.class);
+                        intent.putExtra("patientUid", patientKey);
+                        intent.putExtra("doctorUid", auth.getCurrentUser().getUid());
+                        startActivity(intent);
                     }
                 });
 
@@ -514,18 +518,8 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.action_logout) {
+            auth.signOut();
         } else if (id == R.id.action_profile) {
             Intent intent = new Intent(getApplicationContext(), DoctorProfile.class);
             startActivity(intent, ActivityOptionsCompat

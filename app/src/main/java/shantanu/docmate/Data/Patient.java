@@ -41,6 +41,17 @@ public class Patient {
         this.bloodgroup = bloodgroup;
     }
 
+    public Patient(String profilepic, String gender, String name, String age, String diseases, String bloodgroup, String email, String phone) {
+        this.profilepic = profilepic;
+        this.gender = gender;
+        this.name = name;
+        this.age = age;
+        this.diseases = diseases;
+        this.phone = phone;
+        this.bloodgroup = bloodgroup;
+        this.email = email;
+    }
+
 
     public String getUid() {
         return uid;
