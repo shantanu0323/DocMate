@@ -74,7 +74,10 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
         AndroidManifest.xml
-        <activity android:name=".EPrescription"
+        <activity
+            android:name=".EPrescription"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ViewReport"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

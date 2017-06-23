@@ -226,10 +226,10 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(HomeActivity.this, "Report : " + reportKey, Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(getApplicationContext(), PatientProfile.class);
-//                        intent.putExtra("patientUid", reportKey);
-//                        intent.putExtra("doctorUid", auth.getCurrentUser().getUid());
-//                        startActivity(intent);
+                        Intent intent = new Intent(getApplicationContext(), ViewReport.class);
+                        intent.putExtra("reportKey", reportKey);
+                        intent.putExtra("doctorUid", auth.getCurrentUser().getUid());
+                        startActivity(intent);
                     }
                 });
 

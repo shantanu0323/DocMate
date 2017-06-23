@@ -15,6 +15,14 @@ public class Report {
     public Report() {
     }
 
+    public Report(String profilepic, String name, String image, String time, String message) {
+        this.profilepic = profilepic;
+        this.name = name;
+        this.time = time;
+        this.message = message;
+        this.image = image;
+    }
+
     public String getImage() {
         return image;
     }
